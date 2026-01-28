@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
-import imgWhiteLogo1 from "/images/3.png";
+import imgWhiteLogo1 from "/images/logo/project_logo.png";
 
 const LoginPage = () => {
     const navigate = useNavigate();
