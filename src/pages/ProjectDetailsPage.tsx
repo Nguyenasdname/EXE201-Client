@@ -10,17 +10,6 @@ const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 };
 
-const calculateDaysLeft = (openTime: string | number | Date | undefined) => {
-    if (!openTime) return 0;
-    const startDate = new Date(openTime);
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + 100); // Default 100 days campaign
-
-    const diffTime = endDate.getTime() - new Date().getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0 ? diffDays : 0;
-};
-
 const calculateTimeLeft = (openTime: string | number | Date | undefined) => {
     if (!openTime) return { days: 0, hours: 0, minutes: 0, seconds: 0, isEnded: true };
 
