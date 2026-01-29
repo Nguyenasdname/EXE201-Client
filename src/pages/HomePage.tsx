@@ -8,7 +8,7 @@ import {
     ChevronRight,
     Clock,
     TrendingUp,
-    Award
+    // Award
 } from 'lucide-react';
 import { useState } from 'react';
 import Header from '../components/Header';
@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
     const [projectIndex, setProjectIndex] = useState(0);
-    const [testimonialIndex, setTestimonialIndex] = useState(0);
+    // const [testimonialIndex, setTestimonialIndex] = useState(0);
     const navigate = useNavigate()
 
     const projects = [
@@ -64,32 +64,32 @@ const HomePage = () => {
         }
     ];
 
-    const testimonials = [
-        {
-            id: 1,
-            name: "Nguyễn Văn A",
-            role: "CEO Startup Tech",
-            image: "https://images.unsplash.com/photo-1543132220-7bc04a0e790a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHBlcnNvbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc2ODI5ODk5N3ww&ixlib=rb-4.1.0&q=80&w=1080",
-            content: "Fundtalk đã giúp chúng tôi gọi vốn thành công 5 tỷ đồng trong vòng 3 tháng. Nền tảng rất chuyên nghiệp và minh bạch.",
-            rating: 5
-        },
-        {
-            id: 2,
-            name: "Trần Thị B",
-            role: "Nhà đầu tư",
-            image: "https://images.unsplash.com/photo-1543132220-7bc04a0e790a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHBlcnNvbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc2ODI5ODk5N3ww&ixlib=rb-4.1.0&q=80&w=1080",
-            content: "Tôi đã tìm thấy nhiều dự án tiềm năng trên Fundtalk. Hệ thống báo cáo rất chi tiết và dễ theo dõi.",
-            rating: 5
-        },
-        {
-            id: 3,
-            name: "Lê Văn C",
-            role: "Founder E-commerce",
-            image: "https://images.unsplash.com/photo-1543132220-7bc04a0e790a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHBlcnNvbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc2ODI5ODk5N3ww&ixlib=rb-4.1.0&q=80&w=1080",
-            content: "Cộng đồng Fundtalk rất tích cực và nhiệt tình. Tôi đã nhận được nhiều lời khuyên hữu ích từ các nhà đầu tư.",
-            rating: 5
-        }
-    ];
+    // const testimonials = [
+    //     {
+    //         id: 1,
+    //         name: "Nguyễn Văn A",
+    //         role: "CEO Startup Tech",
+    //         image: "https://images.unsplash.com/photo-1543132220-7bc04a0e790a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHBlcnNvbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc2ODI5ODk5N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+    //         content: "Fundtalk đã giúp chúng tôi gọi vốn thành công 5 tỷ đồng trong vòng 3 tháng. Nền tảng rất chuyên nghiệp và minh bạch.",
+    //         rating: 5
+    //     },
+    //     {
+    //         id: 2,
+    //         name: "Trần Thị B",
+    //         role: "Nhà đầu tư",
+    //         image: "https://images.unsplash.com/photo-1543132220-7bc04a0e790a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHBlcnNvbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc2ODI5ODk5N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+    //         content: "Tôi đã tìm thấy nhiều dự án tiềm năng trên Fundtalk. Hệ thống báo cáo rất chi tiết và dễ theo dõi.",
+    //         rating: 5
+    //     },
+    //     {
+    //         id: 3,
+    //         name: "Lê Văn C",
+    //         role: "Founder E-commerce",
+    //         image: "https://images.unsplash.com/photo-1543132220-7bc04a0e790a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHBlcnNvbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc2ODI5ODk5N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+    //         content: "Cộng đồng Fundtalk rất tích cực và nhiệt tình. Tôi đã nhận được nhiều lời khuyên hữu ích từ các nhà đầu tư.",
+    //         rating: 5
+    //     }
+    // ];
 
     const categories = [
         "Công nghệ",
@@ -137,13 +137,13 @@ const HomePage = () => {
         setProjectIndex((prev) => (prev - 1 + (projects.length - 3)) % (projects.length - 3));
     };
 
-    const nextTestimonial = () => {
-        setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
-    };
+    // const nextTestimonial = () => {
+    //     setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
+    // };
 
-    const prevTestimonial = () => {
-        setTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-    };
+    // const prevTestimonial = () => {
+    //     setTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    // };
 
     return (
         <div className="min-h-screen">
