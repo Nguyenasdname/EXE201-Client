@@ -173,7 +173,7 @@ const CreateProjectPage = () => {
 
                 <BaseLayout />
 
-                <div className="relative max-w-[1200px] mx-auto px-8 text-center">
+                <div className="relative max-w-300 mx-auto px-8 text-center">
                     <h1 className="text-6xl font-bold mb-4 text-shadow-[0px_4px_16px_rgba(154,255,255,0.5)]">
                         Khởi tạo dự án
                     </h1>
@@ -190,7 +190,7 @@ const CreateProjectPage = () => {
                     }} />
                 </div>
 
-                <form onSubmit={handleSubmit} className="relative space-y-20 max-w-[1200px] mx-auto">
+                <form onSubmit={handleSubmit} className="relative space-y-20 max-w-300 mx-auto">
                     {/* Section 1: Thông tin cơ bản */}
                     <section>
                         <h2 className="text-5xl font-bold mb-12 text-shadow-[0px_4px_16px_rgba(154,255,255,0.5)]">
@@ -318,7 +318,7 @@ const CreateProjectPage = () => {
                             Thông tin kêu gọi vốn
                         </h2>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
                                 <div className="flex justify-between mb-2">
                                     <label className="text-2xl italic font-medium">Tổng giá trị kêu gọi</label>
@@ -335,7 +335,7 @@ const CreateProjectPage = () => {
                                 {errors.totalCallValue && <p className="text-red-500 text-sm">{errors.totalCallValue}</p>}
                             </div>
 
-                            <div>
+                            {/* <div>
                                 <div className="flex justify-between mb-2">
                                     <label className="text-2xl italic font-medium">Số lượng phát hành</label>
                                 </div>
@@ -349,7 +349,7 @@ const CreateProjectPage = () => {
                                         }`}
                                 />
                                 {errors.issueQuantity && <p className="text-red-500 text-sm">{errors.issueQuantity}</p>}
-                            </div>
+                            </div> */}
 
                             {/* <div>
                                 <div className="flex justify-between mb-2">
@@ -623,7 +623,7 @@ const CreateProjectPage = () => {
                                 />
                                 <label
                                     htmlFor="terms"
-                                    className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border-2 border-white/20 bg-white/10 peer-checked:bg-gradient-to-br peer-checked:from-cyan-300 peer-checked:to-blue-500"
+                                    className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border-2 border-white/20 bg-white/10 peer-checked:bg-linear-to-br peer-checked:from-cyan-300 peer-checked:to-blue-500"
                                 >
                                     {formData.agreedToTerms && (
                                         <svg className="h-6 w-6" fill="none" viewBox="0 0 28.5 32.9555">
