@@ -439,7 +439,7 @@ const HomePage = () => {
             </section>
 
             {/* Đánh giá và chứng thỉ */}
-            <section className="py-20 px-4 bg-gradient-to-b from-transparent via-purple-900/20 to-transparent text-white">
+            {/* <section className="py-20 px-4 bg-gradient-to-b from-transparent via-purple-900/20 to-transparent text-white">
                 <div className="container mx-auto max-w-7xl">
                     <h2 className="text-4xl lg:text-5xl font-bold text-center mb-4">Đánh giá và chứng thỉ</h2>
                     <p className="text-center text-white/70 mb-12 text-lg">Khách hàng nói gì về chúng tôi</p>
@@ -470,7 +470,7 @@ const HomePage = () => {
                                 </div>
                             </div>
 
-                            {/* Navigation */}
+            
                             <div className="flex justify-center gap-4 mt-8">
                                 <button
                                     onClick={prevTestimonial}
@@ -497,7 +497,7 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             {/* Thành lập 3 bước đơn giản */}
             <section className="py-20 px-4">
