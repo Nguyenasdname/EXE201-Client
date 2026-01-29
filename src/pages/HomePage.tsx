@@ -164,10 +164,14 @@ const HomePage = () => {
                                 cho cả người gọi vốn và nhà đầu tư.
                             </p>
                             <div className="flex gap-4">
-                                <button className="text-white px-8 py-4 bg-gradient-to-r from-cyan-300 via-blue-500 to-blue-600 rounded-xl font-bold text-lg shadow-lg shadow-cyan-500/50 hover:shadow-cyan-500/70 transition-all hover:scale-105">
+                                <button 
+                                className="text-white px-8 py-4 bg-linear-to-r cursor-pointer from-cyan-300 via-blue-500 to-blue-600 rounded-xl font-bold text-lg shadow-lg shadow-cyan-500/50 hover:shadow-cyan-500/70 transition-all hover:scale-105">
                                     Xem Dự Án
                                 </button>
-                                <button className="text-white px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl font-bold text-lg hover:bg-white/20 transition-colors">
+                                <button 
+                                className="text-white px-8 py-4 bg-white/10 cursor-pointer backdrop-blur-md border border-white/20 rounded-xl font-bold text-lg hover:bg-white/20 transition-colors"
+                                onClick={() => navigate('/create-project')}
+                                >
                                     Nộp Dự Án
                                 </button>
                             </div>
