@@ -1,4 +1,4 @@
-import { type projectPackage } from "../interface"
+import { type projectPackage } from "../../interface"
 
 interface ProjectPackageProps {
     projectPackage: projectPackage

@@ -1,4 +1,4 @@
-import svgPaths from '../svg-yt0h61sbfi'
+import svgPaths from '../../svg-yt0h61sbfi'
 import imgWhiteLogo1 from "/images/3.png";
 
 const Footer = () => {

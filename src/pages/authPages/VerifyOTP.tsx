@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '../components/ui/input-otp';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '../../components/ui/input-otp';
 import { toast } from 'sonner';
 import imgWhiteLogo1 from "/images/logo/project_logo.png";
-import { usePost } from '../hooks/usePost';
-import type { ResendOTP, VerifyOTP } from '../interface';
-import { useAuth } from '../context/AuthContext';
+import { usePost } from '../../hooks/usePost';
+import type { ResendOTP, VerifyOTP } from '../../interface';
+import { useAuth } from '../../context/AuthContext';
 
 const OTPVerifyPage = () => {
     const navigate = useNavigate();

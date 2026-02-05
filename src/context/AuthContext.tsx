@@ -1,49 +1,56 @@
-import { createContext, useContext, useState, useEffect, type ReactNode, startTransition } from 'react';
-import type { Login, User, Register } from '../interface';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import type { Login, IUser, Register } from '../interface';
 import { usePost } from '../hooks/usePost';
 import { toast } from 'react-toastify';
-
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
-    user: User | null;
+    user: IUser | null;
     login: (email: string, password: string) => Promise<boolean>;
-    otpVerify: (user: User) => void
+    otpVerify: (user: IUser) => void
     register: (name: string, email: string, password: string, phone: string) => Promise<boolean>;
     logout: () => void;
     isAuthenticated: boolean;
+    isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-    const [user, setUser] = useState<User | null>(null);
-    const { postData } = usePost()
 
+export function AuthProvider({ children }: { children: ReactNode }) {
+    const [user, setUser] = useState<IUser | null>(null);
+    const [loading, setLoading] = useState(true);
+    const { postData } = usePost()
+    const navigate = useNavigate()
     useEffect(() => {
+        // Kiểm tra localStorage
         const storedUser = localStorage.getItem('fundtalk_user');
+
         if (storedUser) {
             try {
                 const parsed = JSON.parse(storedUser);
-                startTransition(() => {
-                    setUser(parsed);
-                });
+                // Cập nhật User NGAY LẬP TỨC, không dùng startTransition
+                // eslint-disable-next-line react-hooks/set-state-in-effect
+                setUser(parsed);
             } catch (err) {
-                if (err instanceof Error) {
-                    toast.error(err.message)
-                }
+                console.error("Auth Init Error:", err);
                 localStorage.removeItem('fundtalk_user');
             }
         }
+
+        // Tắt loading. 
+        // Trong React 18, setUser ở trên và setLoading ở dưới sẽ được "Batch" (gộp) lại 
+        // thành 1 lần render duy nhất -> Đảm bảo khi loading=false thì user đã có dữ liệu.
+        setLoading(false);
     }, []);
 
-    const otpVerify = (user: User) => {
+    const otpVerify = (user: IUser) => {
         setUser(user)
         localStorage.setItem('fundtalk_user', JSON.stringify(user))
     }
 
     const login = async (email: string, password: string): Promise<boolean> => {
         localStorage.clear()
-
         try {
             const res = await postData<Login>("/auth/login", {
                 loginId: email.toLowerCase(),
@@ -63,12 +70,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 toast.error(err.message)
             }
         }
-
         return false;
     };
 
     const register = async (name: string, email: string, password: string, phone: string): Promise<boolean> => {
-
         try {
             const res = await postData<Register>('/auth/register', {
                 userName: name,
@@ -81,7 +86,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 toast.error('Server Error!')
                 return false
             }
-
             localStorage.setItem('token', res.token)
             localStorage.setItem('email', res.email)
         } catch (err) {
@@ -89,15 +93,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 toast.error(err.message)
             }
         }
-
         return true;
     };
 
     const logout = () => {
+        navigate('/')
         setUser(null);
         localStorage.removeItem('fundtalk_user');
         localStorage.removeItem('token')
     };
+
+    // QUAN TRỌNG: Return null để chặn render AppRouter khi chưa load xong user
+    if (loading) {
+        // Bạn có thể thay bằng 1 cái Spinner đẹp đẹp ở giữa màn hình
+        return <div className="min-h-screen flex items-center justify-center bg-[#05050A] text-white">Loading...</div>;
+    }
 
     return (
         <AuthContext.Provider
@@ -107,9 +117,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 otpVerify,
                 register,
                 logout,
-                isAuthenticated: !!user
-            }
-            }
+                isAuthenticated: !!user,
+                isLoading: loading
+            }}
         >
             {children}
         </AuthContext.Provider>

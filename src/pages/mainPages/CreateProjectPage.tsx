@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import svgPaths from "../svg-yt0h61sbfi";
+import svgPaths from "../../svg-yt0h61sbfi";
 import imgDivHeroLights1 from "/images/background/bodyBackgroundCreateProject.png";
-import Header from '../components/Header';
-import BaseLayout from '../layouts/BaseTopBackground';
-import Footer from '../components/Footer';
+import Header from '../../components/main/Header';
+import BaseLayout from '../../layouts/BaseTopBackground';
+import Footer from '../../components/main/Footer';
 import { toast } from 'react-toastify';
-import UploadProjectImages from '../components/UploadProjectImages';
-import { useGet } from '../hooks/useGet';
-import type { projectPackage } from '../interface';
-import ProjectPackage from '../components/ProjectPackage';
-import { bankOptions } from '../constants/BankOption';
+import UploadProjectImages from '../../components/main/UploadProjectImages';
+import { useGet } from '../../hooks/useGet';
+import type { projectPackage, ICategory } from '../../interface';
+import ProjectPackage from '../../components/main/ProjectPackage';
+import { bankOptions } from '../../constants/BankOption';
 import Select from 'react-select'
 import { useNavigate } from 'react-router-dom';
 
@@ -47,6 +47,12 @@ const CreateProjectPage = () => {
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const { data: projectPackageData } = useGet<projectPackage[]>('/projectPackage')
+    const { data: categories } = useGet<ICategory[]>('/category');
+
+    const categoryOptions = categories?.map(cat => ({
+        value: cat._id,
+        label: cat.categoryName
+    })) || [];
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -213,34 +219,82 @@ const CreateProjectPage = () => {
                                         }`}
                                 />
                             </div>
-
                             <div>
                                 <div className="flex justify-between mb-2">
                                     <label className="text-2xl italic font-medium">Loại dự án <span className="text-red-500">*</span></label>
                                     {errors.projectType && <p className="text-red-500 text-sm">{errors.projectType}</p>}
                                 </div>
-                                <input
-                                    type="text"
+
+                                <Select
                                     name="projectType"
-                                    value={formData.projectType}
-                                    onChange={handleInputChange}
-                                    placeholder="Ví dụ: F&B, Công nghệ..."
-                                    className={`w-full px-6 py-4 bg-white border-2 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none transition-colors ${errors.projectType ? 'border-red-500 shadow-red-200 shadow-md animate-pulse' : 'border-[#e4c8ed] focus:border-purple-400'
-                                        }`}
+                                    value={categoryOptions.find(option => option.value === formData.projectType) || null}
+                                    onChange={(selectedOption) => {
+                                        handleFormChange('projectType', selectedOption?.value || '');
+                                    }}
+
+                                    options={categoryOptions}
+                                    placeholder="Chọn hoặc tìm kiếm loại dự án..."
+                                    isSearchable={true}
+                                    classNamePrefix="project-type-select"
+                                    styles={{
+                                        control: (base) => ({
+                                            ...base,
+                                            backgroundColor: 'white',
+                                            borderColor: errors.projectType ? '#ef4444' : '#e4c8ed',
+                                            borderWidth: '2px',
+                                            borderRadius: '0.5rem',
+                                            padding: '0.5rem 0.5rem 0.5rem 1rem', // Padding cho khớp với input bên cạnh
+                                            boxShadow: errors.projectType ? '0 0 20px rgba(239, 68, 68, 0.3)' : 'none',
+                                            '&:hover': { borderColor: '#a78bfa' },
+                                            transition: 'all 0.3s',
+                                            minHeight: '59px', // Chiều cao xấp xỉ input text px-6 py-4
+                                        }),
+                                        valueContainer: (base) => ({
+                                            ...base,
+                                            padding: 0,
+                                        }),
+                                        input: (base) => ({
+                                            ...base,
+                                            color: '#1f2937', // text-gray-800
+                                        }),
+                                        singleValue: (base) => ({
+                                            ...base,
+                                            color: '#1f2937', // text-gray-800
+                                        }),
+                                        placeholder: (base) => ({
+                                            ...base,
+                                            color: '#9ca3af', // placeholder-gray-400
+                                        }),
+                                        menu: (base) => ({
+                                            ...base,
+                                            backgroundColor: 'white',
+                                            borderRadius: '0.5rem',
+                                            boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                                            zIndex: 9999,
+                                        }),
+                                        option: (base, state) => ({
+                                            ...base,
+                                            backgroundColor: state.isSelected ? '#a78bfa' : state.isFocused ? '#f3e8ff' : 'white',
+                                            color: state.isSelected ? 'white' : '#1f2937',
+                                            padding: '12px 16px',
+                                            cursor: 'pointer',
+                                        }),
+                                    }}
+                                    noOptionsMessage={() => "Không tìm thấy loại dự án"}
                                 />
                             </div>
                         </div>
 
                         <div className="mb-8">
                             <div className="flex justify-between mb-2">
-                                <label className="text-2xl italic font-medium">Giới thiệu ngắn <span className="text-red-500">*</span></label>
+                                <label className="text-2xl italic font-medium">Mô Tả Dự Án <span className="text-red-500">*</span></label>
                                 {errors.briefIntro && <p className="text-red-500 text-sm">{errors.briefIntro}</p>}
                             </div>
                             <textarea
                                 name="briefIntro"
                                 value={formData.briefIntro}
                                 onChange={handleInputChange}
-                                placeholder="Mô tả ngắn gọn về dự án"
+                                placeholder="Mô tả về dự án"
                                 rows={4}
                                 className={`w-full px-6 py-4 bg-white border-2 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none transition-colors resize-none ${errors.briefIntro ? 'border-red-500 shadow-red-200 shadow-md animate-pulse' : 'border-[#e4c8ed] focus:border-purple-400'
                                     }`}

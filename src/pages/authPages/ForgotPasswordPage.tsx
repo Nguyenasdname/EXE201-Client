@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Mail, ArrowRight, ArrowLeft } from 'lucide-react';
 import imgWhiteLogo1 from "/images/logo/project_logo.png";
 import { toast } from 'react-toastify';
-import type { ForgotPassword } from '../interface';
-import { usePost } from '../hooks/usePost';
+import type { ForgotPassword } from '../../interface';
+import { usePost } from '../../hooks/usePost';
 
 const ForgotPasswordPage = () => {
     const navigate = useNavigate();

@@ -1,14 +1,14 @@
-import Header from '../components/Header';
-import Footer from "../components/Footer";
-import BaseTopBackground from "../layouts/BaseTopBackground";
+import Header from '../../components/main/Header';
+import Footer from "../../components/main/Footer";
+import BaseTopBackground from "../../layouts/BaseTopBackground";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useGet } from "../hooks/useGet";
+import { useGet } from "../../hooks/useGet";
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { type projectPackage } from '../interface';
-import { GeneratedRandomCode } from '../constants/GeneratedRandomCode';
-import { usePost } from '../hooks/usePost';
+import { type projectPackage } from '../../interface';
+import { GeneratedRandomCode } from '../../constants/GeneratedRandomCode';
+import { usePost } from '../../hooks/usePost';
 
 const PaymentPage = () => {
     const location = useLocation()

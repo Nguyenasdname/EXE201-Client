@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 import imgWhiteLogo1 from "/images/logo/project_logo.png";
 

@@ -1,23 +1,27 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import api from '../api'
 
-export const useGet = <T = unknown>(enpoint: string, payload?: object) => {
+export const useGet = <T = unknown>(endpoint: string, payload?: object) => {
     const [data, setData] = useState<T | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<Error | null>(null)
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await api.get<T>(enpoint)
-                setData(res.data)
-            } catch (err) {
-                setError(err instanceof Error ? err : new Error('An Error Occurred'))
-            } finally {
-                setLoading(false)
-            }
+    const fetchData = useCallback(async () => {
+        setLoading(true)
+        setError(null)
+        try {
+            const res = await api.get<T>(endpoint, { params: payload })
+            setData(res.data)
+        } catch (err) {
+            setError(err instanceof Error ? err : new Error('An Error Occurred'))
+        } finally {
+            setLoading(false)
         }
+    }, [endpoint, JSON.stringify(payload)])
+
+    useEffect(() => {
         fetchData()
-    }, [enpoint, JSON.stringify(payload)])
-    return { data, loading, error }
+    }, [fetchData])
+
+    return { data, loading, error, refetch: fetchData }
 }

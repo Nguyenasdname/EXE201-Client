@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowRight } from 'lucide-react';
 import { toast } from 'react-toastify';
 import imgWhiteLogo1 from "/images/logo/project_logo.png";
-import { usePost } from '../hooks/usePost';
-import { type Register } from '../interface';
+import { usePost } from '../../hooks/usePost';
+import { type Register } from '../../interface';
 
 const RegisterPage = () => {
     const navigate = useNavigate();

@@ -7,7 +7,7 @@ export interface projectPackage {
     successFee: number
 }
 
-export interface User {
+export interface IUser {
     _id: string;
     userName: string;
     userEmail: string;
@@ -18,11 +18,12 @@ export interface User {
     userAddress: string;
     userFirstName: string;
     userLastName: string
+
 }
 
 export interface Login {
     token: string,
-    user: User
+    user: IUser
 }
 
 export interface Register {
@@ -37,7 +38,7 @@ export interface Register {
 
 export interface VerifyOTP {
     token: string,
-    user: User,
+    user: IUser,
     action: string
 }
 
@@ -51,33 +52,28 @@ export interface ForgotPassword {
     email: string
 }
 
-// types/interface.ts
 
-// Interface cho User (chủ dự án - dựa trên ref: 'User')
-export interface User {
+export interface ICategory {
     _id: string;
-    name: string;
-    avatar?: string;
+    categoryName: string;
+    categoryDesc?: string;
 }
 
-// Interface chính cho Project dựa trên Mongoose Schema
 export interface IProject {
-    _id: string | undefined
-    projectName: string | undefined;          
-    projectType: string | undefined;           
-    userId?: User | string | undefined;         
-    briefIntro: string | undefined;          
-    brandImage: string[] | undefined;       
-    activityImage: string[] | undefined;       
-    summary?: string | undefined;             
-    brandStory?: string | undefined;        
-    videoLink?: string | undefined;            
-    totalCallValue: number | undefined;       
-    issueQuantity?: number | undefined;        
-    openTime: string | undefined;              
-    capitalGoal?: string | undefined;          
-
-
+    _id?: string | undefined
+    projectName?: string | undefined;
+    projectType?: ICategory
+    userId?: IUser | string | undefined;
+    briefIntro?: string | undefined;
+    brandImage?: string[] | undefined;
+    activityImage?: string[] | undefined;
+    summary?: string | undefined;
+    brandStory?: string | undefined;
+    videoLink?: string | undefined;
+    totalCallValue?: number | undefined;
+    issueQuantity?: number | undefined;
+    openTime?: string | undefined;
+    capitalGoal?: string | undefined;
     businessName?: string | undefined;
     taxId?: string | undefined;
     bankAccount?: string | undefined;
@@ -94,10 +90,9 @@ export interface IProject {
     backerCount?: number | undefined;
 }
 
-// Interface cho gói quà tặng (Reward Package)
-// Schema Project không chứa cái này, nên thường nó nằm ở collection khác hoặc sub-document
+
 export interface IRewardPackage {
-    id: string | number;
+    _id: string | number;
     name: string;
     price: number;
     description?: string;
@@ -106,12 +101,29 @@ export interface IRewardPackage {
     estimatedDelivery?: string;
 }
 
-export interface IRewardPackage {
-    id: string | number;
-    name: string;
-    price: number;
-    description?: string;
-    quantity: number;
-    image?: string;
-    estimatedDelivery?: string;
+export interface INotification {
+    _id: string,
+    userId: string,
+    title: string,
+    message: string,
+    isRead: boolean,
+    link?: string,
+    createdAt: Date
+}
+
+export interface getAllNotification {
+    notifications: INotification[],
+    total: number,
+    page: number,
+    limit: number,
+    hasMore: boolean,
+}
+
+export interface IDonation {
+    _id: string,
+    amount: number,
+    donor: IUser,
+    project: IProject[]
+    message: string,
+    createdAt: Date
 }

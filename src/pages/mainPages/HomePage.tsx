@@ -1,4 +1,4 @@
-import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { ImageWithFallback } from '../../components/figma/ImageWithFallback';
 import {
     Wallet,
     Shield,
@@ -8,100 +8,62 @@ import {
     ChevronRight,
     Clock,
     TrendingUp,
-    // Award
 } from 'lucide-react';
-import { useState } from 'react';
-import Header from '../components/Header';
-import BaseTopBackground from '../layouts/BaseTopBackground';
-import Footer from '../components/Footer';
+import { useState, useMemo } from 'react';
+import Header from '../../components/main/Header';
+import BaseTopBackground from '../../layouts/BaseTopBackground';
+import Footer from '../../components/main/Footer';
 import { useNavigate } from 'react-router-dom';
+import { useGet } from '../../hooks/useGet';
+import type { ICategory, IProject } from '../../interface';
 
 const HomePage = () => {
+    const navigate = useNavigate();
     const [projectIndex, setProjectIndex] = useState(0);
-    // const [testimonialIndex, setTestimonialIndex] = useState(0);
-    const navigate = useNavigate()
 
-    const projects = [
-        {
-            id: 1,
-            title: "Dự án Khởi nghiệp Công nghệ",
-            category: "Công nghệ",
-            image: "https://images.unsplash.com/photo-1762558978905-850515fc6b3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHN0YXJ0dXAlMjBwcm9qZWN0fGVufDF8fHx8MTc2ODMyMzA5M3ww&ixlib=rb-4.1.0&q=80&w=1080",
-            raised: "2,5 tỷ",
-            goal: "5 tỷ",
-            progress: 50,
-            investors: 125
-        },
-        {
-            id: 2,
-            title: "Nền tảng E-learning",
-            category: "Giáo dục",
-            image: "https://images.unsplash.com/photo-1758874573117-66e1143be91d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBlZHVjYXRpb24lMjB2aWRlb3xlbnwxfHx8fDE3NjgyOTcyNTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
-            raised: "1,2 tỷ",
-            goal: "3 tỷ",
-            progress: 40,
-            investors: 89
-        },
-        {
-            id: 3,
-            title: "Ứng dụng Fintech",
-            category: "Tài chính",
-            image: "https://images.unsplash.com/photo-1623715537851-8bc15aa8c145?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWNobm9sb2d5JTIwd29ya3NwYWNlfGVufDF8fHx8MTc2ODI1MTY5NHww&ixlib=rb-4.1.0&q=80&w=1080",
-            raised: "3,8 tỷ",
-            goal: "6 tỷ",
-            progress: 63,
-            investors: 210
-        },
-        {
-            id: 4,
-            title: "Xây dựng Bất động sản",
-            category: "Xây dựng",
-            image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBwcm9qZWN0fGVufDF8fHx8MTc2ODI4Mzg5OHww&ixlib=rb-4.1.0&q=80&w=1080",
-            raised: "5,5 tỷ",
-            goal: "10 tỷ",
-            progress: 55,
-            investors: 340
+    // 1. Gọi Data từ Hook
+    const { data: categoriesData } = useGet<ICategory[]>('/category');
+    const { data: projectsData } = useGet<IProject[]>('/project');
+
+    // 2. Helper format tiền tệ
+    const formatCurrencyShort = (amount: number | undefined) => {
+        if (!amount) return "0 đ";
+        if (amount >= 1000000000) {
+            return (amount / 1000000000).toLocaleString('vi-VN', { maximumFractionDigits: 1 }) + " tỷ";
         }
-    ];
+        if (amount >= 1000000) {
+            return (amount / 1000000).toLocaleString('vi-VN', { maximumFractionDigits: 0 }) + " tr";
+        }
+        return amount.toLocaleString('vi-VN') + " đ";
+    };
 
-    // const testimonials = [
-    //     {
-    //         id: 1,
-    //         name: "Nguyễn Văn A",
-    //         role: "CEO Startup Tech",
-    //         image: "https://images.unsplash.com/photo-1543132220-7bc04a0e790a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHBlcnNvbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc2ODI5ODk5N3ww&ixlib=rb-4.1.0&q=80&w=1080",
-    //         content: "Fundtalk đã giúp chúng tôi gọi vốn thành công 5 tỷ đồng trong vòng 3 tháng. Nền tảng rất chuyên nghiệp và minh bạch.",
-    //         rating: 5
-    //     },
-    //     {
-    //         id: 2,
-    //         name: "Trần Thị B",
-    //         role: "Nhà đầu tư",
-    //         image: "https://images.unsplash.com/photo-1543132220-7bc04a0e790a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHBlcnNvbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc2ODI5ODk5N3ww&ixlib=rb-4.1.0&q=80&w=1080",
-    //         content: "Tôi đã tìm thấy nhiều dự án tiềm năng trên Fundtalk. Hệ thống báo cáo rất chi tiết và dễ theo dõi.",
-    //         rating: 5
-    //     },
-    //     {
-    //         id: 3,
-    //         name: "Lê Văn C",
-    //         role: "Founder E-commerce",
-    //         image: "https://images.unsplash.com/photo-1543132220-7bc04a0e790a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHBlcnNvbiUyMHBvcnRyYWl0fGVufDF8fHx8MTc2ODI5ODk5N3ww&ixlib=rb-4.1.0&q=80&w=1080",
-    //         content: "Cộng đồng Fundtalk rất tích cực và nhiệt tình. Tôi đã nhận được nhiều lời khuyên hữu ích từ các nhà đầu tư.",
-    //         rating: 5
-    //     }
-    // ];
+    // 3. Xử lý Logic Carousel & Filter Projects
+    const ITEMS_PER_VIEW = 4;
 
-    const categories = [
-        "Công nghệ",
-        "Giáo dục",
-        "Y tế & Sức khỏe",
-        "Tài chính & Fintech",
-        "Bất động sản",
-        "Thương mại điện tử",
-        "Du lịch & Khách sạn",
-        "Nông nghiệp"
-    ];
+    // --- CẬP NHẬT: CHỈ LẤY DỰ ÁN ĐANG ACTIVE ---
+    const projectsList = useMemo(() => {
+        // Kiểm tra data tồn tại và lọc theo status 'active'
+        return projectsData?.filter(p => p.status === 'active') || [];
+    }, [projectsData]);
 
+    const maxIndex = Math.max(0, projectsList.length - ITEMS_PER_VIEW);
+
+    const nextProject = () => {
+        setProjectIndex((prev) => (prev + 1 > maxIndex ? 0 : prev + 1));
+    };
+
+    const prevProject = () => {
+        setProjectIndex((prev) => (prev - 1 < 0 ? maxIndex : prev - 1));
+    };
+
+    // Lấy danh sách dự án visible
+    const visibleProjects = useMemo(() => {
+        if (projectsList.length <= ITEMS_PER_VIEW) return projectsList;
+        return projectsList.slice(projectIndex, projectIndex + ITEMS_PER_VIEW);
+    }, [projectsList, projectIndex]);
+
+
+    // Mock data cho News
     const newsItems = [
         {
             id: 1,
@@ -129,25 +91,9 @@ const HomePage = () => {
         }
     ];
 
-    const nextProject = () => {
-        setProjectIndex((prev) => (prev + 1) % (projects.length - 3));
-    };
-
-    const prevProject = () => {
-        setProjectIndex((prev) => (prev - 1 + (projects.length - 3)) % (projects.length - 3));
-    };
-
-    // const nextTestimonial = () => {
-    //     setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
-    // };
-
-    // const prevTestimonial = () => {
-    //     setTestimonialIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-    // };
-
     return (
         <div className="min-h-screen">
-            {/* Hero Section - GIỚI THIỆU */}
+            {/* Hero Section */}
             <Header />
             <BaseTopBackground />
             <section className="relative py-20 pt-28 px-4 overflow-hidden">
@@ -164,13 +110,13 @@ const HomePage = () => {
                                 cho cả người gọi vốn và nhà đầu tư.
                             </p>
                             <div className="flex gap-4">
-                                <button 
-                                className="text-white px-8 py-4 bg-linear-to-r cursor-pointer from-cyan-300 via-blue-500 to-blue-600 rounded-xl font-bold text-lg shadow-lg shadow-cyan-500/50 hover:shadow-cyan-500/70 transition-all hover:scale-105">
+                                <button
+                                    className="text-white px-8 py-4 bg-gradient-to-r cursor-pointer from-cyan-300 via-blue-500 to-blue-600 rounded-xl font-bold text-lg shadow-lg shadow-cyan-500/50 hover:shadow-cyan-500/70 transition-all hover:scale-105">
                                     Xem Dự Án
                                 </button>
-                                <button 
-                                className="text-white px-8 py-4 bg-white/10 cursor-pointer backdrop-blur-md border border-white/20 rounded-xl font-bold text-lg hover:bg-white/20 transition-colors"
-                                onClick={() => navigate('/create-project')}
+                                <button
+                                    className="text-white px-8 py-4 bg-white/10 cursor-pointer backdrop-blur-md border border-white/20 rounded-xl font-bold text-lg hover:bg-white/20 transition-colors"
+                                    onClick={() => navigate('/create-project')}
                                 >
                                     Nộp Dự Án
                                 </button>
@@ -184,7 +130,6 @@ const HomePage = () => {
                                     className="w-full h-full object-cover rounded-2xl"
                                 />
                             </div>
-                            {/* Decorative elements */}
                             <div className="absolute -top-10 -right-10 w-40 h-40 bg-cyan-500/30 rounded-full blur-3xl"></div>
                             <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-500/30 rounded-full blur-3xl"></div>
                         </div>
@@ -200,7 +145,6 @@ const HomePage = () => {
                     <p className="text-center text-white/70 mb-16 text-lg">Lý do bạn nên chọn chúng tôi</p>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {/* Value 1 */}
                         <div className="bg-gradient-to-br from-cyan-400/90 to-cyan-600/90 rounded-2xl p-8 hover:scale-105 transition-transform">
                             <div className="w-14 h-14 bg-white/20 rounded-xl mb-6 flex items-center justify-center">
                                 <Wallet className="w-8 h-8 text-white" />
@@ -210,8 +154,6 @@ const HomePage = () => {
                                 Tiếp cận hàng ngàn nhà đầu tư tiềm năng và gọi vốn hiệu quả cho dự án của bạn
                             </p>
                         </div>
-
-                        {/* Value 2 */}
                         <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:scale-105 transition-transform">
                             <div className="w-14 h-14 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl mb-6 flex items-center justify-center">
                                 <Shield className="w-8 h-8 text-white" />
@@ -221,8 +163,6 @@ const HomePage = () => {
                                 Hệ thống bảo mật cao cấp và quy trình minh bạch đảm bảo quyền lợi cho tất cả
                             </p>
                         </div>
-
-                        {/* Value 3 */}
                         <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:scale-105 transition-transform">
                             <div className="w-14 h-14 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl mb-6 flex items-center justify-center">
                                 <Users className="w-8 h-8 text-white" />
@@ -232,8 +172,6 @@ const HomePage = () => {
                                 Kết nối với cộng đồng startup và nhà đầu tư năng động nhất Việt Nam
                             </p>
                         </div>
-
-                        {/* Value 4 */}
                         <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:scale-105 transition-transform">
                             <div className="w-14 h-14 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl mb-6 flex items-center justify-center">
                                 <Target className="w-8 h-8 text-white" />
@@ -247,7 +185,7 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* Dự án nổi bật */}
+            {/* Dự án nổi bật (FILTERED ACTIVE ONLY) */}
             <section className="py-20 px-4 text-white">
                 <div className="container mx-auto max-w-7xl">
                     <div className="flex justify-between items-center mb-12">
@@ -258,75 +196,93 @@ const HomePage = () => {
                         <div className="flex gap-2">
                             <button
                                 onClick={prevProject}
-                                className="w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center transition-colors"
+                                disabled={projectsList.length <= ITEMS_PER_VIEW}
+                                className={`w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center transition-colors ${projectsList.length <= ITEMS_PER_VIEW ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 <ChevronLeft className="w-6 h-6" />
                             </button>
                             <button
                                 onClick={nextProject}
-                                className="w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center transition-colors"
+                                disabled={projectsList.length <= ITEMS_PER_VIEW}
+                                className={`w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center transition-colors ${projectsList.length <= ITEMS_PER_VIEW ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 <ChevronRight className="w-6 h-6" />
                             </button>
                         </div>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {projects.map((project) => (
-                            <div
-                                key={project.id}
-                                className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:border-cyan-400/50 transition-all hover:scale-105 group"
-                            >
-                                <div className="relative aspect-video overflow-hidden">
-                                    <ImageWithFallback
-                                        src={project.image}
-                                        alt={project.title}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                                    <div className="absolute top-4 left-4 px-3 py-1 bg-cyan-500 rounded-full text-sm font-bold">
-                                        {project.category}
-                                    </div>
-                                    <div className="absolute bottom-4 left-4 right-4">
-                                        <h3 className="font-bold text-lg mb-2">{project.title}</h3>
-                                    </div>
-                                </div>
-                                <div className="p-6">
-                                    <div className="mb-4">
-                                        <div className="flex justify-between text-sm mb-2">
-                                            <span className="text-white/70">Đã gọi</span>
-                                            <span className="font-bold text-cyan-400">{project.raised}</span>
-                                        </div>
-                                        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                                            <div
-                                                className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"
-                                                style={{ width: `${project.progress}%` }}
-                                            ></div>
-                                        </div>
-                                        <div className="flex justify-between text-sm mt-2">
-                                            <span className="text-white/70">Mục tiêu: {project.goal}</span>
-                                            <span className="text-white/70">{project.progress}%</span>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                                        <div className="flex items-center gap-2 text-sm text-white/70">
-                                            <Users className="w-4 h-4" />
-                                            <span>{project.investors} nhà đầu tư</span>
-                                        </div>
-                                        <button className="text-cyan-400 hover:text-cyan-300 transition-colors text-sm font-bold">
-                                            Chi tiết →
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    {/* Project Grid */}
+                    {projectsList.length > 0 ? (
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {visibleProjects.map((project) => {
+                                // Calculate progress safely
+                                const raised = project.currentAmount || 0;
+                                const goal = project.totalCallValue || 1; 
+                                const progress = Math.min((raised / goal) * 100, 100);
 
+                                return (
+                                    <div
+                                        key={project._id}
+                                        className="bg-linear-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:border-cyan-400/50 transition-all hover:scale-105 group cursor-pointer flex flex-col h-full"
+                                        onClick={() => navigate(`/project-details/${project._id}`)}
+                                    >
+                                        <div className="relative aspect-video overflow-hidden">
+                                            <ImageWithFallback
+                                                src={project.brandImage && project.brandImage.length > 0 ? project.brandImage[0] : "https://via.placeholder.com/600x400"}
+                                                alt={project.projectName || "Project"}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                                            <div className="absolute top-4 left-4 px-3 py-1 bg-cyan-500 rounded-full text-sm font-bold truncate max-w-[80%]">
+                                                {project.projectType?.categoryName || "Khác"}
+                                            </div>
+                                            <div className="absolute bottom-4 left-4 right-4">
+                                                <h3 className="font-bold text-lg mb-2 line-clamp-2">{project.projectName}</h3>
+                                            </div>
+                                        </div>
+                                        <div className="p-6 flex flex-col flex-1">
+                                            <div className="mb-4 flex-1">
+                                                <div className="flex justify-between text-sm mb-2">
+                                                    <span className="text-white/70">Đã gọi</span>
+                                                    <span className="font-bold text-cyan-400">{formatCurrencyShort(project.currentAmount)}</span>
+                                                </div>
+                                                <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"
+                                                        style={{ width: `${progress}%` }}
+                                                    ></div>
+                                                </div>
+                                                <div className="flex justify-between text-sm mt-2">
+                                                    <span className="text-white/70">Mục tiêu: {formatCurrencyShort(project.totalCallValue)}</span>
+                                                    <span className="text-white/70">{Math.round(progress)}%</span>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center justify-between pt-4 border-t border-white/10 mt-auto">
+                                                <div className="flex items-center gap-2 text-sm text-white/70">
+                                                    <Users className="w-4 h-4" />
+                                                    <span>{project.backerCount || 0} nhà đầu tư</span>
+                                                </div>
+                                                <button className="text-cyan-400 hover:text-cyan-300 transition-colors text-sm font-bold">
+                                                    Chi tiết →
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="text-center text-white/60 py-12">
+                            Hiện chưa có dự án nào đang hoạt động. Hãy quay lại sau!
+                        </div>
+                    )}
+
+                    {/* Pagination Dots */}
                     <div className="flex justify-center gap-2 mt-8">
-                        {[0, 1, 2, 3].map((dot) => (
+                        {projectsList.length > 0 && Array.from({ length: Math.ceil(projectsList.length / ITEMS_PER_VIEW) }).slice(0, 5).map((_, dot) => (
                             <div
                                 key={dot}
-                                className={`w-2 h-2 rounded-full transition-all ${dot === projectIndex ? 'bg-cyan-400 w-8' : 'bg-white/30'
+                                className={`w-2 h-2 rounded-full transition-all ${Math.floor(projectIndex / ITEMS_PER_VIEW) === dot ? 'bg-cyan-400 w-8' : 'bg-white/30'
                                     }`}
                             ></div>
                         ))}
@@ -335,30 +291,31 @@ const HomePage = () => {
             </section>
 
             {/* Phân loại */}
-            <section className="py-20 px-4 bg-linear-to-b from-transparent via-purple-900/20 to-transparent text-white">
+            <section className="py-20 px-4 bg-gradient-to-b from-transparent via-purple-900/20 to-transparent text-white">
                 <div className="container mx-auto max-w-7xl">
                     <h2 className="text-4xl lg:text-5xl font-bold text-center mb-4">Phân loại</h2>
                     <p className="text-center text-white/70 mb-12 text-lg">Tìm kiếm dự án theo lĩnh vực</p>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {categories.map((category) => (
+                        {categoriesData?.map((category) => (
                             <button
-                                key={category}
-                                className="px-6 py-4 bg-white/10 hover:bg-linear-to-r hover:from-cyan-400 hover:to-blue-500 backdrop-blur-md border border-white/20 hover:border-cyan-400 rounded-xl font-bold transition-all hover:scale-105"
+                                key={category._id}
+                                className="px-6 py-4 bg-white/10 hover:bg-gradient-to-r hover:from-cyan-400 hover:to-blue-500 backdrop-blur-md border border-white/20 hover:border-cyan-400 rounded-xl font-bold transition-all hover:scale-105"
                             >
-                                {category}
+                                {category.categoryName}
                             </button>
                         ))}
                     </div>
 
                     <div className="text-center mt-8">
-                        <button className="px-8 py-3 bg-linear-to-r from-cyan-300 via-blue-500 to-blue-600 rounded-xl font-bold shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 transition-all">
+                        <button className="px-8 py-3 bg-gradient-to-r from-cyan-300 via-blue-500 to-blue-600 rounded-xl font-bold shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 transition-all">
                             Xem tất cả
                         </button>
                     </div>
                 </div>
             </section>
 
+            {/* ... Phần Tin tức & CTA giữ nguyên như cũ ... */}
             {/* Tin tức mới nhất */}
             <section className="py-20 px-4 text-white">
                 <div className="container mx-auto max-w-7xl">
@@ -438,67 +395,6 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* Đánh giá và chứng thỉ */}
-            {/* <section className="py-20 px-4 bg-gradient-to-b from-transparent via-purple-900/20 to-transparent text-white">
-                <div className="container mx-auto max-w-7xl">
-                    <h2 className="text-4xl lg:text-5xl font-bold text-center mb-4">Đánh giá và chứng thỉ</h2>
-                    <p className="text-center text-white/70 mb-12 text-lg">Khách hàng nói gì về chúng tôi</p>
-
-                    <div className="relative">
-                        <div className="max-w-4xl mx-auto">
-                            <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-3xl p-12 border border-white/20">
-                                <div className="flex flex-col md:flex-row gap-8 items-center">
-                                    <div className="w-32 h-32 flex-shrink-0 rounded-full overflow-hidden border-4 border-cyan-400">
-                                        <ImageWithFallback
-                                            src={testimonials[testimonialIndex].image}
-                                            alt={testimonials[testimonialIndex].name}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
-                                    <div className="flex-1 text-center md:text-left">
-                                        <div className="flex justify-center md:justify-start gap-1 mb-4">
-                                            {[...Array(testimonials[testimonialIndex].rating)].map((_, i) => (
-                                                <Award key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                                            ))}
-                                        </div>
-                                        <p className="text-xl mb-6 text-white/90 italic">
-                                            "{testimonials[testimonialIndex].content}"
-                                        </p>
-                                        <h4 className="font-bold text-xl">{testimonials[testimonialIndex].name}</h4>
-                                        <p className="text-white/60">{testimonials[testimonialIndex].role}</p>
-                                    </div>
-                                </div>
-                            </div>
-
-            
-                            <div className="flex justify-center gap-4 mt-8">
-                                <button
-                                    onClick={prevTestimonial}
-                                    className="w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center transition-colors"
-                                >
-                                    <ChevronLeft className="w-6 h-6" />
-                                </button>
-                                <div className="flex items-center gap-2">
-                                    {testimonials.map((_, index) => (
-                                        <div
-                                            key={index}
-                                            className={`w-2 h-2 rounded-full transition-all ${index === testimonialIndex ? 'bg-cyan-400 w-8' : 'bg-white/30'
-                                                }`}
-                                        ></div>
-                                    ))}
-                                </div>
-                                <button
-                                    onClick={nextTestimonial}
-                                    className="w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center transition-colors"
-                                >
-                                    <ChevronRight className="w-6 h-6" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section> */}
-
             {/* Thành lập 3 bước đơn giản */}
             <section className="py-20 px-4">
                 <div className="container mx-auto max-w-7xl">
@@ -539,8 +435,8 @@ const HomePage = () => {
                         </div>
 
                         {/* Step 2 */}
-                        <div className="relative bg-linear-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:border-cyan-400/50 transition-all hover:scale-105">
-                            <div className="absolute -top-6 left-8 w-12 h-12 bg-linear-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center font-bold text-xl shadow-lg shadow-cyan-500/50">
+                        <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:border-cyan-400/50 transition-all hover:scale-105">
+                            <div className="absolute -top-6 left-8 w-12 h-12 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center font-bold text-xl shadow-lg shadow-cyan-500/50">
                                 2
                             </div>
                             <div className="mt-6">
@@ -710,7 +606,7 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* Bạn là ? - CTA Section */}
+            {/* Bạn là ai? (Giữ nguyên) */}
             <section className="py-20 px-4 bg-gradient-to-b from-transparent via-purple-900/30 to-transparent">
                 <div className="container mx-auto max-w-7xl">
                     <h2 className="text-4xl lg:text-5xl font-bold text-center mb-4 text-white">
@@ -731,9 +627,9 @@ const HomePage = () => {
                             <p className="text-white/70 mb-6">
                                 Bạn có ý tưởng kinh doanh và cần nguồn vốn để khởi nghiệp
                             </p>
-                            <button 
-                            className="px-8 py-3 bg-linear-to-r from-cyan-400 to-blue-500 hover:shadow-lg hover:shadow-cyan-500/50 rounded-xl font-bold transition-all"
-                            onClick={() => navigate('/create-project')}
+                            <button
+                                className="px-8 py-3 bg-gradient-to-r from-cyan-400 to-blue-500 hover:shadow-lg hover:shadow-cyan-500/50 rounded-xl font-bold transition-all"
+                                onClick={() => navigate('/create-project')}
                             >
                                 Gọi vốn ngay
                             </button>
@@ -770,7 +666,7 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* Stats Section */}
+            {/* Stats Section (Giữ nguyên) */}
             <section className="py-20 px-4">
                 <div className="container mx-auto max-w-7xl">
                     <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-3xl p-12 border border-white/20">
@@ -809,4 +705,4 @@ const HomePage = () => {
     );
 }
 
-export default HomePage
+export default HomePage;

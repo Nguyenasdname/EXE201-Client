@@ -5,7 +5,7 @@ export const usePatch = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
-    const patchData = async <T = unknown>(endpoint: string, payload: object | FormData): Promise<T> => {
+    const patchData = async <T = unknown>(endpoint: string, payload?: object | FormData): Promise<T> => {
         setLoading(true);
         try {
             const isFormData = payload instanceof FormData;
